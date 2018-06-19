@@ -158,3 +158,48 @@ instance RLPSerializable B.ByteString where
     rlpDecode (RLPScalar x) = B.singleton x
     rlpDecode (RLPString s) = s
     rlpDecode x = error ("rlpDecode for ByteString not defined for: " ++ show x)
+
+
+-- serialization for tuples, triples, etc. of serializable types
+instance (RLPSerializable a, RLPSerializable b) => RLPSerializable (a,b) where
+  rlpEncode (a,b) = RLPArray [rlpEncode a, rlpEncode b]
+  rlpDecode (RLPArray [a,b]) = (rlpDecode a, rlpDecode b)
+  rlpDecode x = error $ "rlpDecode for tuples not defined for " ++ show x
+
+instance (RLPSerializable a, RLPSerializable b, RLPSerializable c) => RLPSerializable (a,b,c) where
+  rlpEncode (a,b,c) = RLPArray [rlpEncode a, rlpEncode b, rlpEncode c]
+  rlpDecode (RLPArray [a,b,c]) = (rlpDecode a, rlpDecode b, rlpDecode c)
+  rlpDecode x = error $ "rlpDecode for triples not defined for " ++ show x
+
+instance 
+  ( RLPSerializable a 
+  , RLPSerializable b
+  , RLPSerializable c
+  , RLPSerializable d 
+  ) => RLPSerializable (a,b,c,d) where
+  rlpEncode (a,b,c,d) = RLPArray [rlpEncode a, rlpEncode b, rlpEncode c, rlpEncode d]
+  rlpDecode (RLPArray [a,b,c,d]) = (rlpDecode a, rlpDecode b, rlpDecode c, rlpDecode d)
+  rlpDecode x = error $ "rlpDecode for 4-tuples not defined for " ++ show x
+
+instance 
+  ( RLPSerializable a
+  , RLPSerializable b 
+  , RLPSerializable c
+  , RLPSerializable d
+  , RLPSerializable e
+  ) => RLPSerializable (a,b,c,d,e) where
+  rlpEncode (a,b,c,d,e) = RLPArray [rlpEncode a, rlpEncode b, rlpEncode c, rlpEncode d, rlpEncode e]
+  rlpDecode (RLPArray [a,b,c,d,e]) = (rlpDecode a, rlpDecode b, rlpDecode c, rlpDecode d, rlpDecode e)
+  rlpDecode x = error $ "rlpDecode for 5-tuples not defined for " ++ show x
+
+instance 
+  ( RLPSerializable a
+  , RLPSerializable b 
+  , RLPSerializable c
+  , RLPSerializable d
+  , RLPSerializable e
+  , RLPSerializable f
+  ) => RLPSerializable (a,b,c,d,e,f) where
+  rlpEncode (a,b,c,d,e,f) = RLPArray [rlpEncode a, rlpEncode b, rlpEncode c, rlpEncode d, rlpEncode e, rlpEncode f]
+  rlpDecode (RLPArray [a,b,c,d,e,f]) = (rlpDecode a, rlpDecode b, rlpDecode c, rlpDecode d, rlpDecode e, rlpDecode f)
+  rlpDecode x = error $ "rlpDecode for 6-tuples not defined for " ++ show x
